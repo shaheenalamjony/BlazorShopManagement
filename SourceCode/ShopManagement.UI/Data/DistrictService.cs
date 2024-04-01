@@ -23,8 +23,7 @@ namespace ShopManagement.UI.Data
             }
             catch (Exception ex)
             {
-                // Handle exception, log it, or throw it further
-                // For simplicity, rethrowing the exception here
+               
                 throw ex;
             }
         }

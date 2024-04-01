@@ -1,0 +1,47 @@
+﻿@page "/report/district-upazila-report"
+@using ShopManagement.UI.Data
+@using ShopManagement.UI.Services
+@inject ReportService ReportService
+
+<h3>District-wise Upazila Report</h3>
+
+@if (report == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>District Name</th>
+            <th>Upazilas</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in report)
+        {
+            <tr>
+                <td>@item.DistrictName</td>
+                <td>
+                    <ul>
+                        @foreach (var upazila in item.Upazilas)
+                        {
+                            <li>@upazila</li>
+                        }
+                    </ul>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<DistrictUpazilaReport> report;
+
+    protected override async Task OnInitializedAsync()
+    {
+        report = await ReportService.GenerateDistrictUpazilaReportAsync();
+    }
+}

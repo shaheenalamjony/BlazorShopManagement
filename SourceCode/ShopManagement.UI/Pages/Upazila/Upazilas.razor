@@ -1,0 +1,54 @@
+﻿@page "/upazila/upazilas"
+@using ShopManagement.UI.Data
+
+<h3>Upazila List</h3>
+<NavLink class="nav-link" href="/upazila/create">
+    <span class="oi oi-plus" aria-hidden="true">Create Upazila</span>
+</NavLink>
+@if (upazilaList == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>District</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var upazila in upazilaList)
+        {
+            <tr>
+                <td>@upazila.Id</td>
+                <td>@upazila.Name</td>
+                <td>@upazila.District?.Name</td> <!-- Accessing District's Name -->
+                <td><a href="/upazila/edit/@upazila.Id">Edit</a> | <button @onclick="() => DeleteUpazila(upazila.Id)" class="btn btn-link">Delete</button></td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Upazila> upazilaList;
+    [Inject]
+    private UpazilaService UpazilaService { get; set; }
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        upazilaList = await UpazilaService.GetUpazilasAsync();
+    }
+
+    private async Task DeleteUpazila(int id)
+    {
+        await UpazilaService.DeleteUpazilaAsync(id);
+        upazilaList = await UpazilaService.GetUpazilasAsync(); 
+    }
+}

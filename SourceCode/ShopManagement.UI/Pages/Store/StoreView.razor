@@ -1,0 +1,96 @@
+﻿@page "/store/storeList"
+@using ShopManagement.UI.Data
+
+<h3>Store Management</h3>
+<NavLink class="nav-link" href="/store/create">
+    <span class="oi oi-plus" aria-hidden="true">Create District</span>
+</NavLink>
+@if (stores == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th >Regional Office</th>
+            <th >Regional Store</th>
+            <th >District Sales Center</th>
+            <th >Upazila Sales Center</th>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>
+                <table class="table border-1">
+                    <tr>
+                        <td>Ctg A</td>
+                        <td>Ctg B</td>
+                    </tr>
+                </table>
+            </td>
+            <td> <table class="table border-1">
+                <tr>
+                    <td>Ctg B</td>
+                </tr>
+            </table></td>
+        </tr>
+        </thead>
+        <tbody>
+        @if (stores != null && stores.Any())
+        {
+            var groupedStores = stores.GroupBy(s => s.RegionalOfficeEnumId);
+            foreach (var group in groupedStores)
+            {
+                var rowSpan = group.Count();
+                var isFirstRow = true;
+                foreach (var store in group)
+                {
+                    <tr>
+                        @if (isFirstRow)
+                        {
+                            <td rowspan="@rowSpan">@((UI.Enum.Enum.RegionalOffice)store.RegionalOfficeEnumId)</td>
+                                <td rowspan="@rowSpan">@store.RegionalStoreName</td>
+                            isFirstRow = false;
+                        }
+                        @* <td></td> *@
+                        <td>
+                            <table class="table border-1">
+                                <tr>
+                                    <td>@store.TransitDistrict?.Name</td>
+                                    <td>@store.NonTransitDistrict?.Name</td>
+                                </tr> 
+                            </table>
+                        </td>
+                        <td>
+                            <table class="table border-1">
+                                <tr>
+                                    <td>@store.Upazila?.Name</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                }
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5">No stores found.</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+}
+
+@code {
+    private List<Store> stores;
+    [Inject] private StoreService StoreService { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        stores = await StoreService.GetStoresAsync();
+    }
+}

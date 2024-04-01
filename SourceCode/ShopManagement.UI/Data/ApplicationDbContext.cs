@@ -57,7 +57,7 @@ namespace ShopManagement.UI.Data
                 entity.HasOne(e => e.Upazila)
                     .WithMany()
                     .HasForeignKey(e => e.UpazilaId)
-                    .OnDelete(DeleteBehavior.SetNull); // Optional Upazila can be set to null on delete
+                    .OnDelete(DeleteBehavior.SetNull); 
             });
 
         }

@@ -11,14 +11,14 @@ namespace ShopManagement.UI.Data
         public int RegionalOfficeEnumId { get; set; }
         public string RegionalStoreName { get; set; }
 
-        public int? TransitDistrictId { get; set; } // Nullable for optional relationship
-        public District? TransitDistrict { get; set; } // Navigation property (one-to-many with District)
+        public int? TransitDistrictId { get; set; } 
+        public District? TransitDistrict { get; set; } 
 
-        public int? NonTransitDistrictId { get; set; } // Nullable for optional relationship
-        public District? NonTransitDistrict { get; set; } // Navigation property (one-to-many with District)
+        public int? NonTransitDistrictId { get; set; } 
+        public District? NonTransitDistrict { get; set; } 
 
-        public int? UpazilaId { get; set; } // Nullable for optional relationship
-        public Upazila? Upazila { get; set; } // Navigation property (one-to-many with Upazila)
+        public int? UpazilaId { get; set; } 
+        public Upazila? Upazila { get; set; } 
 
         public bool IsTransit { get; set; }
     }

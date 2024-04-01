@@ -1,0 +1,62 @@
+﻿@page "/upazila/edit/{Id:int}"
+@using ShopManagement.UI.Data
+
+<h3>Edit Upazila</h3>
+
+@if (upazila == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <EditForm Model="@upazila" OnValidSubmit="UpdateUpazila">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <InputText id="name" class="form-control" @bind-Value="upazila.Name" />
+            <ValidationMessage For="@(() => upazila.Name)" />
+        </div>
+
+        <div class="form-group">
+            <label for="districtId">District:</label>
+            <select id="districtId" class="form-control" @bind="@upazila.DistrictId">
+                <option value="">Select District</option>
+                @foreach (var district in districts)
+                {
+                    <option value="@district.Id">@district.Name</option>
+                }
+            </select>
+            <ValidationMessage For="@(() => upazila.DistrictId)" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update</button>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    private Upazila upazila;
+    private List<District> districts;
+
+    [Inject]
+    private UpazilaService UpazilaService { get; set; }
+    [Inject]
+    private DistrictService DistrictService { get; set; }
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        upazila = await UpazilaService.GetUpazilaByIdAsync(Id);
+        districts = await DistrictService.GetDistrictsAsync();
+    }
+
+    private async Task UpdateUpazila()
+    {
+        await UpazilaService.UpdateUpazilaAsync(upazila);
+        NavigationManager.NavigateTo("/upazila/upazilas");
+    }
+}

@@ -11,9 +11,9 @@ namespace ShopManagement.UI.Data
         [StringLength(255)]
         public string Name { get; set; }
 
-        public ICollection<Upazila> Upazilas { get; set; } // Navigation property (one-to-many with Upazila)
+        public ICollection<Upazila> Upazilas { get; set; } 
 
-        public ICollection<Store> TransitStores { get; set; } // Navigation property
-        public ICollection<Store> NonTransitStores { get; set; } // Navigation propertyransit District
+        public ICollection<Store> TransitStores { get; set; } 
+        public ICollection<Store> NonTransitStores { get; set; } 
     }
 }

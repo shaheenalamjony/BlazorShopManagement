@@ -1,0 +1,59 @@
+﻿@page "/upazila/create"
+@using ShopManagement.UI.Data
+
+<h3>Create Upazila</h3>
+
+@if (districts == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <EditForm Model="@newUpazila" OnValidSubmit="CreateUpazila">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <InputText id="name" class="form-control" @bind-Value="newUpazila.Name" />
+            <ValidationMessage For="@(() => newUpazila.Name)" />
+        </div>
+
+        <div class="form-group">
+            <label for="districtId">District:</label>
+            <select id="districtId" class="form-control" @bind="@newUpazila.DistrictId">
+                <option value="">Select District</option>
+                @foreach (var district in districts)
+                {
+                    <option value="@district.Id">@district.Name</option>
+                }
+            </select>
+            <ValidationMessage For="@(() => newUpazila.DistrictId)" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create</button>
+    </EditForm>
+}
+
+@code {
+    private Upazila newUpazila = new Upazila();
+    private List<District> districts;
+
+    [Inject]
+    private UpazilaService UpazilaService { get; set; }
+    [Inject]
+    private DistrictService DistrictService { get; set; }
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        districts = await DistrictService.GetDistrictsAsync();
+    }
+
+    private async Task CreateUpazila()
+    {
+        await UpazilaService.CreateUpazilaAsync(newUpazila);
+        NavigationManager.NavigateTo("/upazila/upazilas");
+    }
+}

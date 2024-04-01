@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using ShopManagement.UI.Areas.Identity;
 using ShopManagement.UI.Data;
+using ShopManagement.UI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,9 @@ builder.Services.AddSingleton<WeatherForecastService>();
 
 //services 
 builder.Services.AddScoped<DistrictService>();
+builder.Services.AddScoped<UpazilaService>();
+builder.Services.AddScoped<StoreService>();
+builder.Services.AddScoped<ReportService>();
 
 
 var app = builder.Build();

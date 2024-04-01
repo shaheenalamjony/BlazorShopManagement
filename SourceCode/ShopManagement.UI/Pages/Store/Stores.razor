@@ -1,0 +1,83 @@
+﻿@page "/store/stores"
+@using ShopManagement.UI.Data
+
+<h3>Store Management</h3>
+<NavLink class="nav-link" href="/store/create">
+    <span class="oi oi-plus" aria-hidden="true">Create District</span>
+</NavLink>
+@if (stores == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            @* <th>ID</th> *@
+            <th>Regional Office</th>
+            <th>Regional Store</th>
+            <th>District Sales Center</th>
+            @* <th>Non-Transit District</th> *@
+            <th>Upazila Sales Center</th>
+            @* <th>Is Transit</th> *@
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>
+                <table class="table border-1">
+                    <tr>
+                        <td>Ctg A</td>
+                        <td>Ctg B</td>
+                    </tr>
+                </table>
+            </td>
+            <td> <table class="table border-1">
+                <tr>
+                    <td>Ctg B</td>
+                </tr>
+            </table></td>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var store in stores)
+        {
+            <tr>
+                @* <td>@store.Id</td> *@
+                @* <td>@store.RegionalOfficeEnumId</td> *@
+                    <td>@((UI.Enum.Enum.RegionalOffice)store.RegionalOfficeEnumId)</td>
+
+                @* <td>@store.RegionalOfficeEnum?.ToString()</td> *@
+                <td>@store.RegionalStoreName</td>
+                <td>
+                        <table class="table border-1">
+                        <tr>
+                            <td>@store.TransitDistrict?.Name</td>
+                            <td>@store.NonTransitDistrict?.Name</td>
+                        </tr> 
+                    </table>
+                </td>
+                <td>
+                        <table class="table border-1">
+                            <tr>
+                                <td>@store.Upazila?.Name</td>
+                            </tr>
+                        </table>
+                </td>
+                @* <td>@(store.IsTransit ? "Yes" : "No")</td> *@
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Store> stores;
+    [Inject] private StoreService StoreService { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        stores = await StoreService.GetStoresAsync();
+    }
+}

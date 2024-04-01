@@ -1,0 +1,102 @@
+﻿@page "/store/create"
+@using ShopManagement.UI.Data
+@using Microsoft.AspNetCore.Components.Forms
+
+<h3>Create Store</h3>
+
+<EditForm Model="@newStore" OnSubmit="CreateStore">
+    <div class="form-group">
+        <label for="regionalOfficeEnumId">Regional Office:</label>
+        <InputSelect id="regionalOfficeEnumId" class="form-control" @bind-Value="newStore.RegionalOfficeEnumId">
+            @foreach (var value in Enum.GetValues(typeof(UI.Enum.Enum.RegionalOffice)))
+            {
+                <option value="@value">@value</option>
+            }
+        </InputSelect>
+    </div>
+
+    <div class="form-group">
+        <label for="regionalStoreName">Regional Store Name:</label>
+        <InputText id="regionalStoreName" class="form-control" @bind-Value="newStore.RegionalStoreName" />
+        <ValidationMessage For="@(() => newStore.RegionalStoreName)" />
+    </div>
+
+
+    <div class="form-group">
+        <label for="transitDistrictId">Transit District:</label>
+        <InputSelect id="transitDistrictId" class="form-control" @bind-Value="newStore.TransitDistrictId" @onchange="LoadUpazilas">
+            @* <option value="">Select Transit District</option> *@
+            @foreach (var district in districts)
+            {
+                <option value="@district.Id">@district.Name</option>
+            }
+        </InputSelect>
+    </div>
+
+    <div class="form-group">
+        <label for="isTransit">Is Transit:</label>
+        <InputCheckbox id="isTransit" @bind-Value="newStore.IsTransit" />
+    </div>
+
+    @if (newStore.IsTransit)
+    {
+        <div class="form-group">
+            <label for="nonTransitDistrictId">Non-Transit District:</label>
+            <InputSelect id="nonTransitDistrictId" class="form-control" @bind-Value="newStore.NonTransitDistrictId">
+                <option value="">Select Non-Transit District</option>
+                @foreach (var district in districts)
+                {
+                    <option value="@district.Id">@district.Name</option>
+                }
+            </InputSelect>
+        </div>
+    }
+
+    <div class="form-group">
+        <label for="upazilaId">Upazila:</label>
+        <InputSelect id="upazilaId" class="form-control" @bind-Value="newStore.UpazilaId">
+            @if (upazilas == null)
+            {
+                <option value="">Select Upazila</option>
+            }
+            @foreach (var upazila in upazilas)
+            {
+                <option value="@upazila.Id">@upazila.Name</option>
+            }
+        </InputSelect>
+    </div>
+
+
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</EditForm>
+
+@code {
+    private Store newStore = new Store();
+    private List<District> districts = new List<District>(); 
+    private List<Upazila> upazilas = new List<Upazila>(); 
+
+    [Inject] private StoreService StoreService { get; set; }
+    [Inject] private DistrictService DistrictService { get; set; }
+    [Inject] private UpazilaService UpazilaService { get; set; }
+    [Inject] private NavigationManager NavigationManager { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        districts = await DistrictService.GetDistrictsAsync();
+        upazilas = await UpazilaService.GetUpazilasAsync();
+    }
+
+    private async Task LoadUpazilas(ChangeEventArgs e)
+    {
+        int districtId = int.Parse(e.Value.ToString());
+        upazilas = null; 
+        upazilas = await UpazilaService.GetUpazilasByDistrictIdAsync(districtId);
+    }
+
+    private async Task CreateStore()
+    {
+        await StoreService.CreateStoreAsync(newStore);
+        NavigationManager.NavigateTo("/store/storeList");
+    }
+}
