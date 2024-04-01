@@ -1,5 +1,5 @@
 # BlazorCrudServerApp
-Employee Crud Operation
+Store Mangement
 
 1. For Migration: 
 Add-Migration InitialMigration
