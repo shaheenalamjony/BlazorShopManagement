@@ -1,6 +1,6 @@
 ﻿namespace ShopManagement.UI.Data
 {
-    public class StoreDetailServices
+    public class StoreServices
     {
     }
 }

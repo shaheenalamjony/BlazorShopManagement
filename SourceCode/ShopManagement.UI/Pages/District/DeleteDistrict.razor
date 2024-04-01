@@ -1,0 +1,23 @@
+﻿@page "/district/delete/{Id:int}"
+@using ShopManagement.UI.Data
+
+<h3>Delete District</h3>
+
+<p>Are you sure you want to delete this district?</p>
+
+<button class="btn btn-danger" @onclick="Delete">Delete</button>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    [Inject]
+    private DistrictService DistrictService { get; set; }
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+
+    private async Task Delete()
+    {
+        await DistrictService.DeleteDistrictAsync(Id);
+        NavigationManager.NavigateTo("/district/districts");
+    }
+}

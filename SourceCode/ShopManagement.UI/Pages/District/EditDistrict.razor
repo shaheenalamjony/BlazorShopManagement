@@ -1,0 +1,38 @@
+﻿@page "/district/edit/{Id:int}"
+@using ShopManagement.UI.Data
+
+<h3>Edit District</h3>
+
+<EditForm Model="@district" OnValidSubmit="UpdateDistrict">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <InputText id="name" class="form-control" @bind-Value="district.Name" />
+        <ValidationMessage For="@(() => district.Name)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    private District district;
+    [Inject]
+    private DistrictService DistrictService { get; set; }
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        district = await DistrictService.GetDistrictByIdAsync(Id);
+    }
+
+    private async Task UpdateDistrict()
+    {
+        await DistrictService.UpdateDistrictAsync(district);
+        NavigationManager.NavigateTo("/district/districts");
+    }
+}
